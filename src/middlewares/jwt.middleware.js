@@ -14,6 +14,7 @@ webToken.generateToken = async (user) => {
     return jwt.sign(
       payload,
       secret,
+      { expiresIn: '1d' }
     )
   } catch (error) {
     throw new Error('Error generating token')

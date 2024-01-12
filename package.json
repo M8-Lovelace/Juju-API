@@ -2,12 +2,12 @@
   "name": "juju",
   "version": "1.0.0",
   "description": "This project is a test for juju",
-  "main": "app.js",
+  "main": "src/app.js",
   "type": "module",
   "author": "Laura Susano",
   "license": "MIT",
   "scripts": {
-    "start": "node app.js"
+    "start": "node src/app.js"
   },
   "keywords": [
     "npm",
