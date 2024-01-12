@@ -41,7 +41,7 @@ bookController.delete = async (request, response) => {
   try {
     const book = await Book.findById(id);
     await Book.findByIdAndDelete(id);
-    response.status(200).json({ message: "Book deleted", book });
+    response.status(200).json(book);
   } catch (error) {
     response.status(500).json({ message: error });
   }

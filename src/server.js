@@ -1,7 +1,8 @@
 import express from "express";
-import * as dotenv from "dotenv";
 import cors from "cors";
+import * as dotenv from "dotenv";
 import dbConnection from "./database.js";
+import { swaggerDocs } from "./v1/swagger.js";
 import { routerUser } from "./routes/user.routes.js";
 import { routerBook } from "./routes/book.routes.js";
 
@@ -33,6 +34,7 @@ class Server {
   listen() {
     this.app.listen(this.port, () => {
       console.log(`Juju library is running on ${this.port}!`);
+      swaggerDocs(this.app, '4600');
     });
   }
 }
