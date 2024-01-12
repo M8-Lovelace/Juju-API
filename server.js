@@ -17,6 +17,11 @@ class Server {
     this.app.use(cors());
   }
 
+  routes() {
+    this.app.use("/api/books", require("./routes/book.routes.js"));
+    this.app.use("/api/users", require("./routes/user.routes.js"));
+  }
+
   async conexionBd() {
     await dbConnection();
   }
