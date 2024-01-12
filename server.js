@@ -2,6 +2,8 @@ import express from "express";
 import * as dotenv from "dotenv";
 import cors from "cors";
 import dbConnection from "./database.js";
+import { routerUser } from "./routes/user.routes.js";
+import { routerBook } from "./routes/book.routes.js";
 
 dotenv.config();
 
@@ -9,6 +11,8 @@ class Server {
   constructor() {
     this.app = express();
     this.port = process.env.PORT;
+    this.middlewares();
+    this.routes();
     this.conexionBd();
   }
 
@@ -18,8 +22,8 @@ class Server {
   }
 
   routes() {
-    this.app.use("/api/books", require("./routes/book.routes.js"));
-    this.app.use("/api/users", require("./routes/user.routes.js"));
+    this.app.use("/api/user", routerUser);
+    this.app.use("/api/book", routerBook);
   }
 
   async conexionBd() {
