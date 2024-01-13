@@ -23,6 +23,8 @@ userValidation.loginValidation = [
   check("email").custom(async (email) => {
     await validateIfUserExist(email);
   }),
+  check("password", "Password is required").exists(),
+  check("password", "Password is not valid").isLength({ min: 8 }),
   validateField,
 ]
 

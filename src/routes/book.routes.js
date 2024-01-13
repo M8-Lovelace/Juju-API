@@ -14,6 +14,16 @@ const routerBook = Router();
  *   post:
  *     summary: Create a new book
  *     tags: [Book]
+ *     parameters: 
+ *       - name: "Authorization"
+ *         in: "header"
+ *         description: "JWT Token"
+ *         required: true
+ *         type: "string"
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
  *     requestBody:
  *       required: true
  *       content:
@@ -37,33 +47,21 @@ const routerBook = Router();
  *         - title
  *         - author
  *         - year
- *         - status
  *       properties:
- *         _id:
- *           type: string
- *           description: The auto-generated id of the book
- *         title:
- *           type: string
- *           description: The title of your book
- *         author:
- *           type: string
- *           description: The book author
- *         year:
- *           type: string
- *           description: The year of the book
- *         status:
- *           type: boolean
- *           description: Whether you have finished reading the book
- *         __v:
- *           type: string
- *           description: The auto-generated control version
+ *         data:
+ *           type: object
+ *           properties:
+ *             book:
+ *               $ref: '#/components/schemas/BookCreateBody'
  *       example:
- *         _id: 65a19d626ca05e1bc0075c05
- *         title: El principito
- *         author: Juju
- *         year: "2020"
- *         status: true
- *         __v: 0
+ *         data:
+ *           book:
+ *             _id: 65a19d626ca05e1bc0075c05
+ *             title: El principito
+ *             author: Juju
+ *             year: "2020"
+ *             status: true
+ *             __v: 0
  *     BookCreateBody:
  *       type: object
  *       required:
@@ -87,7 +85,6 @@ const routerBook = Router();
  */
 routerBook.post("/", [webToken.validateToken], bookController.create);
 
-
 /**
  * @swagger
  * tags:
@@ -95,30 +92,53 @@ routerBook.post("/", [webToken.validateToken], bookController.create);
  *   description: The books managing API
  * /api/book/{id}:
  *   get:
- *     summary: Search a book by id
+ *     summary: Get a book by id
  *     tags: [Book]
+ *     parameters: 
+ *       - name: "Authorization"
+ *         in: "header"
+ *         description: "JWT Token"
+ *         required: true
+ *         type: "string"
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
  *     responses:
- *       200:
- *         description: The found book.
+ *       201:
+ *         description: The book was found.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/BookSearchById'
+ *               $ref: '#/components/schemas/BookById'
  *       500:
  *         description: Some server error
  * components:
  *   schemas:
- *     BookSearchById:
+ *     BookById:
+ *       type: object
+ *       properties:
+ *         data:
+ *           type: object
+ *           properties:
+ *             book:
+ *               $ref: '#/components/schemas/BookByIdBody'
+ *       example:
+ *         data:
+ *           book:
+ *             _id: 65a19d626ca05e1bc0075c05
+ *             title: El principito
+ *             author: Juju
+ *             year: "2020"
+ *             status: true
+ *             __v: 0
+ *     BookByIdBody:
  *       type: object
  *       required:
  *         - title
  *         - author
  *         - year
- *         - status
  *       properties:
- *         _id:
- *           type: string
- *           description: The auto-generated id of the book
  *         title:
  *           type: string
  *           description: The title of your book
@@ -128,56 +148,69 @@ routerBook.post("/", [webToken.validateToken], bookController.create);
  *         year:
  *           type: string
  *           description: The year of the book
- *         status:
- *           type: boolean
- *           description: Whether you have finished reading the book
- *         __v:
- *           type: string
- *           description: The auto-generated control version
  *       example:
- *         _id: 65a19d626ca05e1bc0075c05
  *         title: El principito
  *         author: Juju
  *         year: "2020"
- *         status: true
- *         __v: 0
  */
 routerBook.get("/:id", [webToken.validateToken, bookValidation.getIdValidation], bookController.getBookById);
-
 
 /**
  * @swagger
  * tags:
- *   name: Book 
+ *   name: Book
  *   description: The books managing API
- * /api/book/:
+ * /api/book:
  *   get:
- *     summary: Search all books
+ *     summary: Get all books
  *     tags: [Book]
+ *     parameters: 
+ *       - name: "Authorization"
+ *         in: "header"
+ *         description: "JWT Token"
+ *         required: true
+ *         type: "string"
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
  *     responses:
- *       200:
- *         description: The founds books.
+ *       201:
+ *         description: The books were found.
  *         content:
  *           application/json:
  *             schema:
- *               type: array
- *               items:
- *                 $ref: '#/components/schemas/BookSearchAll'
+ *               $ref: '#/components/schemas/BookAll'
  *       500:
  *         description: Some server error
  * components:
  *   schemas:
- *     BookSearchAll:
+ *     BookAll:
+ *       type: object
+ *       properties:
+ *         data:
+ *           type: object
+ *           properties:
+ *             book:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/BookAllBody'
+ *       example:
+ *         data:
+ *           book:
+ *             - _id: 65a19d626ca05e1bc0075c05
+ *               title: El principito
+ *               author: Juju
+ *               year: "2020"
+ *               status: true
+ *               __v: 0
+ *     BookAllBody:
  *       type: object
  *       required:
  *         - title
  *         - author
  *         - year
- *         - status
  *       properties:
- *         _id:
- *           type: string
- *           description: The auto-generated id of the book
  *         title:
  *           type: string
  *           description: The title of your book
@@ -187,22 +220,12 @@ routerBook.get("/:id", [webToken.validateToken, bookValidation.getIdValidation],
  *         year:
  *           type: string
  *           description: The year of the book
- *         status:
- *           type: boolean
- *           description: Whether you have finished reading the book
- *         __v:
- *           type: string
- *           description: The auto-generated control version
  *       example:
- *         _id: 65a19d626ca05e1bc0075c05
  *         title: El principito
  *         author: Juju
  *         year: "2020"
- *         status: true
- *         __v: 0
  */
 routerBook.get("/", [webToken.validateToken], bookController.getAll);
-
 
 /**
  * @swagger
@@ -213,9 +236,19 @@ routerBook.get("/", [webToken.validateToken], bookController.getAll);
  *   delete:
  *     summary: Delete a book by id
  *     tags: [Book]
+ *     parameters: 
+ *       - name: "Authorization"
+ *         in: "header"
+ *         description: "JWT Token"
+ *         required: true
+ *         type: "string"
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
  *     responses:
- *       200:
- *         description: The found book to delete.
+ *       201:
+ *         description: The book was deleted.
  *         content:
  *           application/json:
  *             schema:
@@ -227,9 +260,27 @@ routerBook.get("/", [webToken.validateToken], bookController.getAll);
  *     BookDelete:
  *       type: object
  *       properties:
- *         _id:
- *           type: string
- *           description: The auto-generated id of the book
+ *         data:
+ *           type: object
+ *           properties:
+ *             book:
+ *               $ref: '#/components/schemas/BookDeleteBody'
+ *       example:
+ *         data:
+ *           book:
+ *             _id: 65a19d626ca05e1bc0075c05
+ *             title: El principito
+ *             author: Juju
+ *             year: "2020"
+ *             status: true
+ *             __v: 0
+ *     BookDeleteBody:
+ *       type: object
+ *       required:
+ *         - title
+ *         - author
+ *         - year
+ *       properties:
  *         title:
  *           type: string
  *           description: The title of your book
@@ -239,22 +290,12 @@ routerBook.get("/", [webToken.validateToken], bookController.getAll);
  *         year:
  *           type: string
  *           description: The year of the book
- *         status:
- *           type: boolean
- *           description: Whether you have finished reading the book
- *         __v:
- *           type: string
- *           description: The auto-generated control version
  *       example:
- *         _id: 65a19d626ca05e1bc0075c05
  *         title: El principito
  *         author: Juju
  *         year: "2020"
- *         status: true
- *         __v: 0
  */
 routerBook.delete("/:id", [webToken.validateToken, bookValidation.deleteValidation], bookController.delete);
-
 
 /**
  * @swagger
@@ -265,6 +306,16 @@ routerBook.delete("/:id", [webToken.validateToken, bookValidation.deleteValidati
  *   put:
  *     summary: Update a book by id
  *     tags: [Book]
+ *     parameters: 
+ *       - name: "Authorization"
+ *         in: "header"
+ *         description: "JWT Token"
+ *         required: true
+ *         type: "string"
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
  *     requestBody:
  *       required: true
  *       content:
@@ -272,8 +323,8 @@ routerBook.delete("/:id", [webToken.validateToken, bookValidation.deleteValidati
  *           schema:
  *             $ref: '#/components/schemas/BookUpdateBody'
  *     responses:
- *       200:
- *         description: The found book to update.
+ *       201:
+ *         description: The book was updated.
  *         content:
  *           application/json:
  *             schema:
@@ -284,37 +335,21 @@ routerBook.delete("/:id", [webToken.validateToken, bookValidation.deleteValidati
  *   schemas:
  *     BookUpdate:
  *       type: object
- *       required:
- *         - title
- *         - author
- *         - year
- *         - status
  *       properties:
- *         _id:
- *           type: string
- *           description: The auto-generated id of the book
- *         title:
- *           type: string
- *           description: The title of your book
- *         author:
- *           type: string
- *           description: The book author
- *         year:
- *           type: string
- *           description: The year of the book
- *         status:
- *           type: boolean
- *           description: Whether you have finished reading the book
- *         __v:
- *           type: string
- *           description: The auto-generated control version
+ *         data:
+ *           type: object
+ *           properties:
+ *             book:
+ *               $ref: '#/components/schemas/BookUpdateBody'
  *       example:
- *         _id: 65a19d626ca05e1bc0075c05
- *         title: El principito
- *         author: Juju
- *         year: "2020"
- *         status: true
- *         __v: 0
+ *         data:
+ *           book:
+ *             _id: 65a19d626ca05e1bc0075c05
+ *             title: El principito
+ *             author: Juju
+ *             year: "2020"
+ *             status: true
+ *             __v: 0
  *     BookUpdateBody:
  *       type: object
  *       required:
@@ -338,33 +373,62 @@ routerBook.delete("/:id", [webToken.validateToken, bookValidation.deleteValidati
  */
 routerBook.put("/:id", [webToken.validateToken, bookValidation.updateValidation], bookController.update);
 
-
 /**
  * @swagger
  * tags:
  *   name: Book
  *   description: The books managing API
- * /api/search/{title}:
+ * /api/book/search/{title}:
  *   get:
  *     summary: Search a book by title
  *     tags: [Book]
+ *     parameters: 
+ *       - name: "Authorization"
+ *         in: "header"
+ *         description: "JWT Token"
+ *         required: true
+ *         type: "string"
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
  *     responses:
- *       200:
+ *       201:
  *         description: The book was found.
  *         content:
  *           application/json:
  *             schema:
- *               $ref: '#/components/schemas/BookSearchTitle'
+ *               $ref: '#/components/schemas/BookByTitle'
  *       500:
  *         description: Some server error
  * components:
  *   schemas:
- *     BookSearchTitle:
+ *     BookByTitle:
  *       type: object
  *       properties:
- *         _id:
- *           type: string
- *           description: The auto-generated id of the book
+ *         data:
+ *           type: object
+ *           properties:
+ *             book:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/BookByTitleBody'
+ *       example:
+ *         data:
+ *           book:
+ *             - _id: 65a19d626ca05e1bc0075c05
+ *               title: El principito
+ *               author: Juju
+ *               year: "2020"
+ *               status: true
+ *               __v: 0
+ *     BookByTitleBody:
+ *       type: object
+ *       required:
+ *         - title
+ *         - author
+ *         - year
+ *       properties:
  *         title:
  *           type: string
  *           description: The title of your book
@@ -374,19 +438,10 @@ routerBook.put("/:id", [webToken.validateToken, bookValidation.updateValidation]
  *         year:
  *           type: string
  *           description: The year of the book
- *         status:
- *           type: boolean
- *           description: Whether you have finished reading the book
- *         __v:
- *           type: string
- *           description: The auto-generated control version
  *       example:
- *         _id: 65a19d626ca05e1bc0075c05
  *         title: El principito
  *         author: Juju
  *         year: "2020"
- *         status: true
- *         __v: 0
  */
 routerBook.get("/search/:title", [webToken.validateToken, bookValidation.searchBookValidation], bookController.searchBookByTitle);
 
