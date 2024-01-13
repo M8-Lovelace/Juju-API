@@ -5,7 +5,7 @@ const validateField = (request, response, next) => {
 
   if (!errors.isEmpty()) {
     return response
-      .status(400)
+      .status(200)
       .json({ errors: errors.array() });
   }
   next();
