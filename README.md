@@ -22,7 +22,8 @@ Esto instalará todas las dependencias necesarias para el proyecto.
 Para comenzar a usar la aplicación, primero configure las variables de entorno en un archivo `.env` en el directorio raíz del proyecto. Se deben configurar las siguientes variables:
 
 - PORT: el puerto en el que se ejecutará la aplicación
-- MONGO_URI: la URL de conexión para la base de datos MongoDB
+- MONGO_URL: la URL de conexión para la base de datos MongoDB
+- JWT_SECRET: código secreto para Json Web Token
 
 Una vez que se han configurado las variables de entorno, puede iniciar la aplicación con el siguiente comando:
 
