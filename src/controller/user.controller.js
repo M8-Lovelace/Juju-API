@@ -23,7 +23,7 @@ userController.login = async (request, response) => {
     if (!matchPassword) {
       return response.status(200).json({
         errors: [{
-          msg: "Password is incorrect",
+          msg: "Wrong password",
         }]
       });
     }
@@ -46,7 +46,7 @@ userController.create = async (request, response) => {
     })
     user.password = await bcrypt.hash(password, 10);
     await user.save();
-    response.status(201).json(user);
+    response.status(201).json({ data: { user } });
   } catch (error) {
     response.status(500).json({ message: error });
   }
@@ -54,8 +54,8 @@ userController.create = async (request, response) => {
 
 userController.findAll = async (request, response) => {
   try {
-    const users = await User.find();
-    response.status(200).json(users);
+    const user = await User.find();
+    response.status(200).json({ data: { user } });
   } catch (error) {
     response.status(500).json({ message: error });
   }

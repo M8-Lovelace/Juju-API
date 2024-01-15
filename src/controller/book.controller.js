@@ -97,4 +97,21 @@ bookController.searchBookByTitle = async (request, response) => {
   }
 };
 
+bookController.updateStatus = async (request, response) => {
+  const { id } = request.params;
+  const { status } = request.body;
+  try {
+    const book = await Book.findById(id);
+    book.status = status;
+    await book.save();
+    response.status(200).json({
+      data: {
+        book
+      }
+    });
+  } catch (error) {
+    response.status(500).json({ message: error });
+  }
+};
+
 export default bookController;

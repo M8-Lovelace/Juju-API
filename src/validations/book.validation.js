@@ -52,4 +52,14 @@ bookValidation.searchBookValidation = [
   validateField,
 ];
 
+bookValidation.updateStatusValidation = [
+  check("id", "El id es obligatorio ").notEmpty().exists(),
+  check("id", "El id no es valido").isMongoId(),
+  check("id").custom(async (id) => {
+    await validateIfBookExist(id);
+  }),
+  check("status", "El status es obligatorio ").notEmpty().exists(),
+  validateField,
+]
+
 export default bookValidation;

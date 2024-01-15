@@ -1,7 +1,7 @@
 import { Router } from "express";
-import bookValidation from "../validations/book.validation.js";
 import bookController from "../controller/book.controller.js";
 import webToken from "../middlewares/jwt.middleware.js";
+import bookValidation from "../validations/book.validation.js";
 
 const routerBook = Router();
 
@@ -444,5 +444,83 @@ routerBook.put("/:id", [webToken.validateToken, bookValidation.updateValidation]
  *         year: "2020"
  */
 routerBook.get("/search/:title", [webToken.validateToken, bookValidation.searchBookValidation], bookController.searchBookByTitle);
+
+/**
+ * @swagger
+ * tags:
+ *   name: Book
+ *   description: The books managing API
+ * /api/book/status/{id}:
+ *   put:
+ *     summary: Update a book status by id
+ *     tags: [Book]
+ *     parameters: 
+ *       - name: "Authorization"
+ *         in: "header"
+ *         description: "JWT Token"
+ *         required: true
+ *         type: "string"
+ *     consumes:
+ *       - application/json
+ *     produces:
+ *       - application/json
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/BookUpdateStatusBody'
+ *     responses:
+ *       201:
+ *         description: The book was updated.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/BookUpdateStatus'
+ *       500:
+ *         description: Some server error
+ * components:
+ *   schemas:
+ *     BookUpdateStatus:
+ *       type: object
+ *       properties:
+ *         data:
+ *           type: object
+ *           properties:
+ *             book:
+ *               type: object
+ *               required:
+ *                 - status
+ *               properties:
+ *                 title:
+ *                   type: string
+ *                   description: The title of your book
+ *                 author:
+ *                   type: string
+ *                   description: The book author
+ *                 year:
+ *                   type: string
+ *                   description: The year of the book
+ *               example:
+ *                 data:
+ *                   book:
+ *                     _id: 65a19d626ca05e1bc0075c05
+ *                     title: El principito
+ *                     author: Juju
+ *                     year: "2020"
+ *                     status: true
+ *                     __v: 0
+ *     BookUpdateStatusBody:
+ *       type: object
+ *       required:
+ *         - status
+ *       properties:
+ *         status:
+ *           type: boolean
+ *           description: The status of your book
+ *       example:
+ *         status: true
+ */
+routerBook.put("/status/:id", [webToken.validateToken, bookValidation.updateStatusValidation], bookController.updateStatus)
 
 export { routerBook };

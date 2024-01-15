@@ -1,5 +1,5 @@
-import User from "../models/User.js";
 import bcrypt from "bcryptjs";
+import User from "../models/User.js";
 
 const userHelper = {}
 
@@ -10,7 +10,7 @@ userHelper.uniqueEmail = async (email) => {
       throw new Error();
     }
   } catch (error) {
-    throw new Error("El usuario ya existe por email");
+    throw new Error("Email already exist");
   }
 };
 
@@ -21,7 +21,7 @@ userHelper.validateIfUserExist = async (email) => {
       throw new Error();
     }
   } catch (error) {
-    throw new Error("El usuario no existe");
+    throw new Error("The user does not exist");
   }
 };
 
@@ -33,8 +33,8 @@ userHelper.validatePassword = async (email, password) => {
       throw new Error();
     }
   } catch (error) {
-    throw new Error("El password no es correcto");
+    throw new Error("The password is incorrect");
   }
 };
 
-export { userHelper }
+export { userHelper };
